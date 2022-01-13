@@ -4,7 +4,7 @@
   </div>
   <div class="colums2">
     <farm-card
-      v-for="farm in getFarmInfo"
+      v-for="farm in getListOfFarms"
       :key="farm.farmId"
       :farmInfo="farm"
     ></farm-card>
@@ -13,19 +13,18 @@
 
 <script>
 import FarmCard from "./FarmCard.vue";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   mounted() {
-    this.$store.dispatch("syncFarmInfo");
+    this.syncListOfFarms;
   },
   components: {
     FarmCard,
   },
   computed: {
-    getFarmInfo() {
-      return this.$store.getters.getFarmInfo;
-    },
+    ...mapGetters(["getListOfFarms"]),
+    ...mapActions(["syncListOfFarms"]),
   },
 };
-//farmdatoja farmien määrän verran
-//kortteja joihin farmien tiedot
 </script>

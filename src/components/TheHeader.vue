@@ -6,7 +6,7 @@
 
 <style scoped>
 div {
-  background-color: green;
+  background-color: rgb(45, 153, 45);
   height: 100px;
 }
 h1 {

@@ -5,7 +5,9 @@ export default createStore({
   state() {
     return {
       serverStatus: true,
-      farmInfo: [],
+      listOfFarms: [],
+      selectedFarm: "",
+      allFarmStatistics: {},
     };
   },
   mutations: {
@@ -15,32 +17,51 @@ export default createStore({
           state.serverStatus = true;
         } else state.serverStatus == false;
       });
-      console.log(state.serverStatus);
     },
-    syncFarmInfo(state) {
+    syncListOfFarms(state) {
       axios("http://localhost:8080/v1/farms").then((res) => {
         if (res.statusText != "OK") {
           console.log("Ei yhteyttä");
           //luo errortapahtuma
         } else {
+          state.listOfFarms = [];
           res.data.forEach((farm) => {
-            state.farmInfo.push(farm);
+            state.listOfFarms.push(farm);
           });
         }
       });
     },
+    syncFarmStatistics(state, id) {
+      const url = "http://localhost:8080/v1/farms/" + id + "/stats";
+      axios(url).then((res) => {
+        if (res.statusText != "OK") {
+          console.log("Ei yhteyttä");
+          //luo errortapahtuma
+        } else {
+          //pitää luoda objektiksi allFarmStatisticsiin
+          state.allFarmStatistics = res.data;
+        }
+      });
+      console.log(state.allFarmStatistics);
+    },
   },
   getters: {
-    getFarmInfo(state) {
-      return state.farmInfo;
+    getListOfFarms(state) {
+      return state.listOfFarms;
     },
+    // getFarmStatistics(state, id) {
+    //   return state.allFarmStatistics.id;
+    // },
   },
   actions: {
     checkServerStatus(context) {
       context.commit("checkServerStatus");
     },
-    syncFarmInfo(context) {
-      context.commit("getFarmInfo");
+    syncListOfFarms(context) {
+      context.commit("syncListOfFarms");
+    },
+    syncFarmStatistics(context, id) {
+      context.commit("syncFarmStatistics", id);
     },
   },
   modules: {},

@@ -8,6 +8,7 @@ export default createStore({
       listOfFarms: [],
       selectedFarm: "",
       allFarmStatistics: {},
+      filteredStatistics: [],
     };
   },
   mutations: {
@@ -31,27 +32,42 @@ export default createStore({
         }
       });
     },
-    syncFarmStatistics(state, id) {
-      const url = "http://localhost:8080/v1/farms/" + id + "/stats";
+    syncFarmStatistics(state, payload) {
+      const farmId = payload;
+      const url = "http://localhost:8080/v1/farms/" + farmId + "/stats";
       axios(url).then((res) => {
         if (res.statusText != "OK") {
           console.log("Ei yhteyttä");
           //luo errortapahtuma
         } else {
-          //pitää luoda objektiksi allFarmStatisticsiin
-          state.allFarmStatistics = res.data;
+          if (farmId in state.allFarmStatistics) {
+            state.allFarmStatistics[farmId] = res.data;
+          } else {
+            state.allFarmStatistics[farmId] = res.data;
+          }
         }
       });
-      console.log(state.allFarmStatistics);
     },
+    changeSelectedFarm(state, farm) {
+      state.selectedFarm = farm;
+    },
+    // filterStatistics(state, filterOption) {
+    //filteröi statsit
+    // },
   },
   getters: {
-    getListOfFarms(state) {
+    listOfFarms(state) {
       return state.listOfFarms;
     },
-    // getFarmStatistics(state, id) {
-    //   return state.allFarmStatistics.id;
-    // },
+    selectedFarm(state) {
+      return state.selectedFarm;
+    },
+    farmStatistics: (state) => (farmId) => {
+      return state.allFarmStatistics[farmId];
+    },
+    filteredStatistics(state) {
+      return state.filteredStatistics;
+    },
   },
   actions: {
     checkServerStatus(context) {
@@ -60,8 +76,17 @@ export default createStore({
     syncListOfFarms(context) {
       context.commit("syncListOfFarms");
     },
-    syncFarmStatistics(context, id) {
-      context.commit("syncFarmStatistics", id);
+    syncFarmStatistics(context, payload) {
+      context.commit("syncFarmStatistics", payload);
+    },
+    changeSelectedFarm(context, payload) {
+      context.commit("changeSelectedFarm", payload);
+    },
+    resetSelectedFarm(context) {
+      context.commit("changeSelectedFarm", "");
+    },
+    filterStatistics(context, filterOption) {
+      context.commit("filterStatistics", filterOption);
     },
   },
   modules: {},

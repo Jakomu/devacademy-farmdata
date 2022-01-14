@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["id"],
-  //lisää actions ja luo filtteröintimutatio jne..
   computed: {
+    ...mapActions(["filterStatistics"]),
     ...mapGetters(["filteredStatistics"]),
   },
 };

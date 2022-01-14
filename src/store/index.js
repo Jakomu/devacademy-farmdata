@@ -8,6 +8,7 @@ export default createStore({
       listOfFarms: [],
       selectedFarm: "",
       allFarmStatistics: {},
+      validatedStatistics: [],
       filteredStatistics: [],
     };
   },
@@ -35,24 +36,60 @@ export default createStore({
     syncFarmStatistics(state, payload) {
       const farmId = payload;
       const url = "http://localhost:8080/v1/farms/" + farmId + "/stats";
-      axios(url).then((res) => {
-        if (res.statusText != "OK") {
-          console.log("Ei yhteyttä");
-          //luo errortapahtuma
-        } else {
-          if (farmId in state.allFarmStatistics) {
-            state.allFarmStatistics[farmId] = res.data;
+      axios(url)
+        .then((res) => {
+          if (res.statusText != "OK") {
+            console.log("Ei yhteyttä");
+            //luo errortapahtuma
           } else {
-            state.allFarmStatistics[farmId] = res.data;
+            //onko turha?
+            if (farmId in state.allFarmStatistics) {
+              state.allFarmStatistics[farmId] = res.data;
+            } else {
+              state.allFarmStatistics[farmId] = res.data;
+            }
           }
-        }
-      });
+        })
+        .then(() => {
+          state.validatedStatistics = state.allFarmStatistics[
+            farmId
+          ].measurements.filter(
+            (obj) =>
+              (obj.sensor_type == "ph" && obj.value >= 0 && obj.value <= 14) ||
+              (obj.sensor_type == "rainfall" &&
+                obj.value >= 0 &&
+                obj.value <= 500) ||
+              (obj.sensor_type == "temperature" &&
+                obj.value >= -50 &&
+                obj.value <= 100)
+          );
+        });
     },
     changeSelectedFarm(state, farm) {
       state.selectedFarm = farm;
     },
     // filterStatistics(state, filterOption) {
-    //filteröi statsit
+    //   const data = state.allFarmStatistics[state.selectedFarm].measurements;
+    //   for (obj in data) {
+    //     if ()
+    //   }
+    // },
+    // validateData(state, payload) {
+    //   console.log("validointi alkoi");
+    //   const farmId = payload;
+    //   state.validatedStatistics = state.allFarmStatistics[
+    //     farmId
+    //   ].measurements.filter((obj) => {
+    //     if (obj.sensor_type == "ph") {
+    //       obj.value >= 0 && obj.value <= 14;
+    //     } else if (obj.sensor_type == "rainfall") {
+    //       obj.value >= 0 && obj.value <= 500;
+    //     } else if (obj.sensor_type == "temperature") {
+    //       obj.value >= -50 && obj.value <= 100;
+    //     }
+    //   });
+    //   console.log(state.validatedStatistics);
+    //   console.log("validointi päättyi");
     // },
   },
   getters: {
@@ -76,8 +113,10 @@ export default createStore({
     syncListOfFarms(context) {
       context.commit("syncListOfFarms");
     },
+    //async/await ei toimi!!!!
     syncFarmStatistics(context, payload) {
       context.commit("syncFarmStatistics", payload);
+      // context.commit("validateData", payload);
     },
     changeSelectedFarm(context, payload) {
       context.commit("changeSelectedFarm", payload);

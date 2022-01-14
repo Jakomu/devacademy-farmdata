@@ -2,18 +2,18 @@
   <div>
     <h1>{{ id }}</h1>
     <div>
-      <button>All measurements</button>
+      <button @click="filterStatistics('all')">All measurements</button>
       <button @click="filterStatistics('rainfall')">Rainfall</button>
-      <button>Temperature</button>
-      <button>Ph-value</button>
+      <button @click="filterStatistics('temperature')">Temperature</button>
+      <button @click="filterStatistics('ph')">Ph-value</button>
     </div>
     <table>
       <tr>
-        <th>Date/time</th>
-        <th>Sensor</th>
-        <th>Value</th>
+        <th @click="sortOrder('date')">Date/time</th>
+        <th @click="sortOrder('sensor')">Sensor</th>
+        <th @click="sortOrder('value')">Value</th>
       </tr>
-      <tr v-for="obj in filteredStatistics" :key="obj.datetime">
+      <tr v-for="obj in filteredStatistics" :key="obj.datetime + obj.value">
         <td>{{ obj.datetime }}</td>
         <td>{{ obj.sensor_type }}</td>
         <td>{{ obj.value }}</td>
@@ -27,8 +27,10 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["id"],
   computed: {
-    ...mapActions(["filterStatistics"]),
-    ...mapGetters(["filteredStatistics"]),
+    ...mapGetters(["filteredStatistics", "loading"]),
+  },
+  methods: {
+    ...mapActions(["filterStatistics", "sortOrder"]),
   },
 };
 </script>

@@ -14,7 +14,7 @@
         </option>
       </select>
     </div>
-    <div><p>There is problem with statistic syncing...</p></div>
+    <div v-if="loading"><p>Loading...</p></div>
     <statistic-table
       v-if="this.selectedFarm"
       :id="selectedFarm"
@@ -33,7 +33,7 @@ export default {
   },
   components: { StatisticTable },
   computed: {
-    ...mapGetters(["listOfFarms", "selectedFarm"]),
+    ...mapGetters(["listOfFarms", "selectedFarm", "loading"]),
     ...mapActions(["syncListOfFarms", "resetSelectedFarm"]),
   },
   methods: {

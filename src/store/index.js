@@ -146,6 +146,7 @@ export default createStore({
     // },
     changeStartDate(state, startDate) {
       console.log(startDate);
+      //MERGEÄ BRANCHIT!!!
       //starttipäivä rajaamaan valitatedStatisticsia
     },
     changeEndDate(state, endDate) {

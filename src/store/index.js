@@ -14,12 +14,8 @@ export default createStore({
       orderAscending: true,
       activatedOrder: "datetime",
       statisticType: "table",
-      // chartData: {
-      //   ph: {
-      //     labels: [],
-      //     datasets: []
-      //   }
-      // },
+      allMonthlyData: {},
+      selectedYear: "2019",
     };
   },
   mutations: {
@@ -164,6 +160,80 @@ export default createStore({
       );
       state.filteredStatistics.splice(endIndex);
     },
+    syncMonthlyStatistics(state, farmId) {
+      state.loading = true;
+      const url =
+        "http://localhost:8080/v1/farms/" + farmId + "/stats/ph/monthly";
+      axios(url)
+        .then((res) => {
+          if (res.statusText != "OK") {
+            console.log("Ei yhteyttä");
+            //luo errortapahtuma
+          } else {
+            state.allMonthlyData.ph = res.data;
+          }
+        })
+        .then(() => {
+          const url =
+            "http://localhost:8080/v1/farms/" +
+            farmId +
+            "/stats/temperature/monthly";
+          axios(url).then((res) => {
+            if (res.statusText != "OK") {
+              console.log("Ei yhteyttä");
+              //luo errortapahtuma
+            } else {
+              state.allMonthlyData.temperature = res.data;
+            }
+          });
+        })
+        .then(() => {
+          const url =
+            "http://localhost:8080/v1/farms/" +
+            farmId +
+            "/stats/rainfall/monthly";
+          axios(url).then((res) => {
+            if (res.statusText != "OK") {
+              console.log("Ei yhteyttä");
+              //luo errortapahtuma
+            } else {
+              state.allMonthlyData.rainfall = res.data;
+            }
+          });
+        })
+        .then(() => {
+          state.allMonthlyData.ph.stats = state.allMonthlyData.ph.stats.filter(
+            (obj) =>
+              obj.year &&
+              obj.month >= 1 &&
+              obj.month <= 12 &&
+              obj.average >= 0 &&
+              obj.average <= 14
+          );
+          state.allMonthlyData.temperature.stats = state.allMonthlyData.temperature.stats.filter( //problem..?
+            (obj) =>
+              obj.year &&
+              obj.month >= 1 &&
+              obj.month <= 12 &&
+              obj.average >= -50 &&
+              obj.average <= 100
+          );
+          state.allMonthlyData.rainfall.stats =
+            state.allMonthlyData.rainfall.stats.filter(
+              (obj) =>
+                obj.year &&
+                obj.month >= 1 &&
+                obj.month <= 12 &&
+                obj.average >= 0 &&
+                obj.average <= 500
+            );
+        });
+      state.loading = false;
+    },
+    selectYear(state, year) {
+      state.selectedYear = year;
+      console.log(state.selectedYear);
+    },
   },
   getters: {
     listOfFarms(state) {
@@ -186,6 +256,12 @@ export default createStore({
     },
     statisticType(state) {
       return state.statisticType;
+    },
+    monthlyStatistics(state) {
+      return state.allMonthlyData;
+    },
+    selectedYear(state) {
+      return state.selectedYear;
     },
   },
   actions: {
@@ -221,6 +297,12 @@ export default createStore({
     },
     changeEndDate(context, endDate) {
       context.commit("changeEndDate", endDate);
+    },
+    syncMonthlyStatistics(context, farmId) {
+      context.commit("syncMonthlyStatistics", farmId);
+    },
+    selectYear(context, year) {
+      context.commit("selectYear", year);
     },
   },
 });

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { LineChart } from "vue-chart-3";
 import {
   Chart,
@@ -25,13 +26,30 @@ export default {
   data() {
     return {
       chartData: {
-        labels: ["Vihtori", "Pekka"],
+        labels: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
         datasets: [{ data: [20, 15] }],
       },
     };
   },
+  props: ["sensor"],
   components: {
     LineChart,
+  },
+  computed: {
+    ...mapGetters(["monthlyStatistics", "selectedYear"]),
   },
 };
 </script>

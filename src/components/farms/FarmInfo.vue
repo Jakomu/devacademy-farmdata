@@ -4,7 +4,7 @@
   </div>
   <div class="colums2">
     <farm-card
-      v-for="farm in getListOfFarms"
+      v-for="farm in listOfFarms"
       :key="farm.farmId"
       :farmInfo="farm"
     ></farm-card>
@@ -23,7 +23,7 @@ export default {
     FarmCard,
   },
   computed: {
-    ...mapGetters(["getListOfFarms"]),
+    ...mapGetters(["listOfFarms"]),
     ...mapActions(["syncListOfFarms"]),
   },
 };

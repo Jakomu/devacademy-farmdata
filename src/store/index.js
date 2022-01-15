@@ -14,6 +14,12 @@ export default createStore({
       orderAscending: true,
       activatedOrder: "datetime",
       statisticType: "table",
+      // chartData: {
+      //   ph: {
+      //     labels: [],
+      //     datasets: []
+      //   }
+      // },
     };
   },
   mutations: {
@@ -70,6 +76,7 @@ export default createStore({
           state.validatedStatistics.forEach((obj) => {
             obj.datetime = obj.datetime.replace("T", " ");
             obj.datetime = obj.datetime.replace("Z", "");
+            obj.datetime = obj.datetime.slice(0, -4);
           });
         });
       state.loading = false;
@@ -129,7 +136,21 @@ export default createStore({
     },
     changeStatisticType(state, type) {
       state.statisticType = type;
-      console.log(state.statisticType);
+    },
+    // createChartData(state) {
+    //   state.validatedStatistics.forEach(obj => {
+    //     if (obj.sensor_type == "ph")
+    //   })
+
+    // state.validatedStatistics;
+    // },
+    changeStartDate(state, startDate) {
+      console.log(startDate);
+      //starttipäivä rajaamaan valitatedStatisticsia
+    },
+    changeEndDate(state, endDate) {
+      console.log(endDate);
+      //endipäivä rajaamaan valitatedStatisticsia
     },
   },
   getters: {
@@ -179,6 +200,15 @@ export default createStore({
     },
     changeStatisticType(context, type) {
       context.commit("changeStatisticType", type);
+    },
+    createChartData(context) {
+      context.commit("createChartData");
+    },
+    changeStartDate(context, startDate) {
+      context.commit("changeStartDate", startDate);
+    },
+    changeEndDate(context, endDate) {
+      context.commit("changeEndDate", endDate);
     },
   },
 });

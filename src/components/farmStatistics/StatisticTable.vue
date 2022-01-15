@@ -7,6 +7,10 @@
       <button @click="filterStatistics('temperature')">Temperature</button>
       <button @click="filterStatistics('ph')">Ph-value</button>
     </div>
+    <div>
+      <input @change="startDateInput" type="date" />
+      <input @change="endDateInput" type="date" />
+    </div>
     <table>
       <tr>
         <th
@@ -51,7 +55,20 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(["filterStatistics", "sortOrder"]),
+    ...mapActions([
+      "filterStatistics",
+      "sortOrder",
+      "changeStartDate",
+      "changeEndDate",
+    ]),
+    startDateInput(event) {
+      const startDate = event.target.value;
+      this.changeStartDate(startDate);
+    },
+    endDateInput(event) {
+      const endDate = event.target.value;
+      this.changeEndDate(endDate);
+    },
   },
 };
 </script>

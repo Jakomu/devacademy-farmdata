@@ -8,8 +8,9 @@
       <button @click="filterStatistics('ph')">Ph-value</button>
     </div>
     <div>
-      <input @change="startDateInput" type="date" />
-      <input @change="endDateInput" type="date" />
+      <input v-model="startDate" type="date" />
+      <input v-model="endDate" type="date" />
+      <button @click="dateInput">Update</button>
     </div>
     <table>
       <tr>
@@ -44,6 +45,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      startDate: "",
+      endDate: "",
+    };
+  },
   props: ["id"],
   computed: {
     ...mapGetters([
@@ -61,13 +68,9 @@ export default {
       "changeStartDate",
       "changeEndDate",
     ]),
-    startDateInput(event) {
-      const startDate = event.target.value;
-      this.changeStartDate(startDate);
-    },
-    endDateInput(event) {
-      const endDate = event.target.value;
-      this.changeEndDate(endDate);
+    dateInput() {
+      if (this.startDate != "") this.changeStartDate(this.startDate);
+      if (this.endDate != "") this.changeEndDate(this.endDate);
     },
   },
 };

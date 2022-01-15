@@ -145,13 +145,24 @@ export default createStore({
     // state.validatedStatistics;
     // },
     changeStartDate(state, startDate) {
-      console.log(startDate);
-      //MERGEÄ BRANCHIT!!!
-      //starttipäivä rajaamaan valitatedStatisticsia
+      state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
+        state.activatedOrder = "datetime";
+        return a.datetime.toLowerCase().localeCompare(b.datetime.toLowerCase());
+      });
+      const startIndex = state.filteredStatistics.findIndex(
+        (obj) => obj.datetime.localeCompare(startDate) >= 0
+      );
+      state.filteredStatistics.splice(0, startIndex);
     },
     changeEndDate(state, endDate) {
-      console.log(endDate);
-      //endipäivä rajaamaan valitatedStatisticsia
+      state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
+        state.activatedOrder = "datetime";
+        return a.datetime.toLowerCase().localeCompare(b.datetime.toLowerCase());
+      });
+      const endIndex = state.filteredStatistics.findIndex(
+        (obj) => obj.datetime.localeCompare(endDate) >= 0
+      );
+      state.filteredStatistics.splice(endIndex);
     },
   },
   getters: {

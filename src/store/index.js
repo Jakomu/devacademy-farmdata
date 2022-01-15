@@ -12,6 +12,7 @@ export default createStore({
       filteredStatistics: [],
       loading: false, //tee loadinghäkkyrä tai joku semmonen
       orderAscending: true,
+      activatedOrder: "",
     };
   },
   mutations: {
@@ -75,30 +76,55 @@ export default createStore({
     changeSelectedFarm(state, farm) {
       state.selectedFarm = farm;
       state.filteredStatistics = [];
+      state.activatedOrder = "";
+      state.orderAscending = true;
       //voisi miettiä jos laittaisi automaattisesti "all"-näkymän
     },
     filterStatistics(state, filterOption) {
       state.filteredStatistics = [];
       const data = state.validatedStatistics;
       if (filterOption != "all") {
-        console.log(filterOption);
         state.filteredStatistics = data.filter(
           (obj) => obj.sensor_type == filterOption
         );
       } else state.filteredStatistics = data;
-      console.log(state.filteredStatistics);
     },
     sortOrder(state, order) {
       //toimii valuella, mutta ei kirjaimilla...
-      //ascending order kans pitää tehdä
       if (order == "value") {
-        state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
-          return a.value - b.value;
-        });
-      } else {
-        state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
-          return a.datetime - b.datetime;
-        });
+        if (state.activatedOrder != "value") {
+          state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
+            state.activatedOrder = "value";
+            return a.value - b.value;
+          });
+        } else {
+          state.orderAscending = !state.orderAscending;
+          state.filteredStatistics = state.filteredStatistics.reverse();
+        }
+      } else if (order == "sensor_type") {
+        if (state.activatedOrder != "sensor_type") {
+          state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
+            state.activatedOrder = "sensor_type";
+            return a.sensor_type
+              .toLowerCase()
+              .localeCompare(b.sensor_type.toLowerCase());
+          });
+        } else {
+          state.orderAscending = !state.orderAscending;
+          state.filteredStatistics = state.filteredStatistics.reverse();
+        }
+      } else if (order == "datetime") {
+        if (state.activatedOrder != "datetime") {
+          state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
+            state.activatedOrder = "datetime";
+            return a.datetime
+              .toLowerCase()
+              .localeCompare(b.datetime.toLowerCase());
+          });
+        } else {
+          state.orderAscending = !state.orderAscending;
+          state.filteredStatistics = state.filteredStatistics.reverse();
+        }
       }
     },
   },

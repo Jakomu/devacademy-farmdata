@@ -9,8 +9,8 @@
     </div>
     <table>
       <tr>
-        <th @click="sortOrder('date')">Date/time</th>
-        <th @click="sortOrder('sensor')">Sensor</th>
+        <th @click="sortOrder('datetime')">Date/time</th>
+        <th @click="sortOrder('sensor_type')">Sensor</th>
         <th @click="sortOrder('value')">Value</th>
       </tr>
       <tr v-for="obj in filteredStatistics" :key="obj.datetime + obj.value">

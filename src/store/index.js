@@ -12,7 +12,8 @@ export default createStore({
       filteredStatistics: [],
       loading: false, //tee loadinghäkkyrä tai joku semmonen
       orderAscending: true,
-      activatedOrder: "",
+      activatedOrder: "datetime",
+      statisticType: "table",
     };
   },
   mutations: {
@@ -76,7 +77,7 @@ export default createStore({
     changeSelectedFarm(state, farm) {
       state.selectedFarm = farm;
       state.filteredStatistics = [];
-      state.activatedOrder = "";
+      state.activatedOrder = "datetime";
       state.orderAscending = true;
       //voisi miettiä jos laittaisi automaattisesti "all"-näkymän
     },
@@ -90,7 +91,6 @@ export default createStore({
       } else state.filteredStatistics = data;
     },
     sortOrder(state, order) {
-      //toimii valuella, mutta ei kirjaimilla...
       if (order == "value") {
         if (state.activatedOrder != "value") {
           state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
@@ -127,6 +127,10 @@ export default createStore({
         }
       }
     },
+    changeStatisticType(state, type) {
+      state.statisticType = type;
+      console.log(state.statisticType);
+    },
   },
   getters: {
     listOfFarms(state) {
@@ -143,6 +147,12 @@ export default createStore({
     },
     loading(state) {
       return state.loading;
+    },
+    activatedOrder(state) {
+      return state.activatedOrder;
+    },
+    statisticType(state) {
+      return state.statisticType;
     },
   },
   actions: {
@@ -166,6 +176,9 @@ export default createStore({
     },
     sortOrder(context, order) {
       context.commit("sortOrder", order);
+    },
+    changeStatisticType(context, type) {
+      context.commit("changeStatisticType", type);
     },
   },
 });

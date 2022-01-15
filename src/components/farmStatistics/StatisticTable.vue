@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ id }}</h1>
+    <h1>{{ listOfFarms[selectedFarm - 1].name }}</h1>
     <div>
       <button @click="filterStatistics('all')">All measurements</button>
       <button @click="filterStatistics('rainfall')">Rainfall</button>
@@ -9,9 +9,24 @@
     </div>
     <table>
       <tr>
-        <th @click="sortOrder('datetime')">Date/time</th>
-        <th @click="sortOrder('sensor_type')">Sensor</th>
-        <th @click="sortOrder('value')">Value</th>
+        <th
+          :class="{ active: activatedOrder == 'datetime' }"
+          @click="sortOrder('datetime')"
+        >
+          Date/time
+        </th>
+        <th
+          :class="{ active: activatedOrder == 'sensor_type' }"
+          @click="sortOrder('sensor_type')"
+        >
+          Sensor
+        </th>
+        <th
+          :class="{ active: activatedOrder == 'value' }"
+          @click="sortOrder('value')"
+        >
+          Value
+        </th>
       </tr>
       <tr v-for="obj in filteredStatistics" :key="obj.datetime + obj.value">
         <td>{{ obj.datetime }}</td>
@@ -27,7 +42,13 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["id"],
   computed: {
-    ...mapGetters(["filteredStatistics", "loading"]),
+    ...mapGetters([
+      "filteredStatistics",
+      "loading",
+      "activatedOrder",
+      "listOfFarms",
+      "selectedFarm",
+    ]),
   },
   methods: {
     ...mapActions(["filterStatistics", "sortOrder"]),
@@ -35,4 +56,26 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+table {
+  border-style: ridge;
+  box-shadow: 0px 0px 15px black;
+  border-radius: 5px;
+  padding: 1rem;
+  margin: 2rem auto;
+}
+th {
+  border-style: solid;
+  border-radius: 5px;
+  padding: 1rem 1rem;
+}
+td {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  padding: 0.5rem 1rem;
+}
+.active {
+  border-width: 4px;
+}
+</style>

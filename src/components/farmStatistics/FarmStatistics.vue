@@ -47,11 +47,13 @@ export default {
       "changeSelectedFarm",
       "syncFarmStatistics",
       "changeStatisticType",
+      "syncMonthlyStatistics",
     ]),
     selectFarm(event) {
       const farmId = event.target.value;
       this.changeSelectedFarm(farmId);
       this.syncFarmStatistics(farmId);
+      this.syncMonthlyStatistics(farmId);
     },
     changeType(type) {
       this.changeStatisticType(type);

@@ -40,7 +40,7 @@ export default {
           "Nov",
           "Dec",
         ],
-        datasets: [{ data: [20, 15] }],
+        datasets: [{ data: [] }],
       },
     };
   },
@@ -49,7 +49,24 @@ export default {
     LineChart,
   },
   computed: {
-    ...mapGetters(["monthlyStatistics", "selectedYear"]),
+    ...mapGetters(["selectedYear", "monthlyDatasets"]),
+  },
+  mounted() {
+    if (this.sensor == "ph") {
+      for (let i = 0; i < 12; i++) {
+        this.chartData.datasets[0].data[i] = this.monthlyDatasets.ph[0].data[i];
+      }
+    } else if (this.sensor == "temperature") {
+      for (let i = 0; i < 12; i++) {
+        this.chartData.datasets[0].data[i] =
+          this.monthlyDatasets.temperature[0].data[i];
+      }
+    } else if (this.sensor == "rainfall") {
+      for (let i = 0; i < 12; i++) {
+        this.chartData.datasets[0].data[i] =
+          this.monthlyDatasets.rainfall[0].data[i];
+      }
+    }
   },
 };
 </script>

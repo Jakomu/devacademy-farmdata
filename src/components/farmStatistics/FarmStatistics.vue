@@ -26,14 +26,17 @@
     </div>
     <div :class="{ card: selectedFarm }">
       <statistic-table
-        v-if="this.selectedFarm && this.statisticType == 'table'"
+        v-if="this.selectedFarm && !error && this.statisticType == 'table'"
         :id="selectedFarm"
       ></statistic-table>
       <statistic-chart
-        v-else-if="this.selectedFarm && this.statisticType == 'chart'"
+        v-else-if="this.selectedFarm && !error && this.statisticType == 'chart'"
         :id="selectedFarm"
       >
       </statistic-chart>
+      <p v-else-if="this.error">
+        Something went wrong... <br /><br />{{ this.errorMessage }}
+      </p>
       <p v-else>Please select a farm</p>
     </div>
   </div>
@@ -52,7 +55,14 @@ export default {
   },
   components: { StatisticTable, StatisticChart },
   computed: {
-    ...mapGetters(["listOfFarms", "selectedFarm", "loading", "statisticType"]),
+    ...mapGetters([
+      "listOfFarms",
+      "selectedFarm",
+      "loading",
+      "statisticType",
+      "errorMessage",
+      "error",
+    ]),
     ...mapActions(["syncListOfFarms", "resetSelectedFarm"]),
   },
   methods: {

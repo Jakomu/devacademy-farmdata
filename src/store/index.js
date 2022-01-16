@@ -4,6 +4,8 @@ import axios from "axios";
 export default createStore({
   state() {
     return {
+      error: false,
+      errorMessage: "",
       activeTab: "home",
       serverStatus: true,
       listOfFarms: [],
@@ -36,40 +38,38 @@ export default createStore({
     };
   },
   mutations: {
-    // checkServerStatus(state) {
-    //   axios("http://localhost:8080/health").then((res) => {
-    //     if (res.serverStatus == "OK") {
-    //       state.serverStatus = true;
-    //     } else state.serverStatus == false;
-    //   });
-    // },
     syncListOfFarms(state) {
+      state.error = false;
+      state.errorMessage = "";
       state.loading = true;
-      axios("http://localhost:8080/v1/farms").then((res) => {
-        if (res.statusText != "OK") {
-          console.log("Ei yhteyttä");
-          //luo errortapahtuma
-        } else {
+      axios("http://localhost:8080/v1/farms")
+        .catch((error) => {
+          state.error = true;
+          state.errorMessage = error.message;
+          console.log(error.message);
+        })
+        .then((res) => {
           state.listOfFarms = [];
           res.data.forEach((farm) => {
             state.listOfFarms.push(farm);
           });
-        }
-      });
+        });
       state.loading = false;
     },
     syncFarmStatistics(state) {
+      state.error = false;
+      state.errorMessage = "";
       state.loading = true;
       const farmId = state.selectedFarm;
       const url = "http://localhost:8080/v1/farms/" + farmId + "/stats";
       axios(url)
+        .catch((error) => {
+          state.error = true;
+          state.errorMessage = error.message;
+          console.log(error.message);
+        })
         .then((res) => {
-          if (res.statusText != "OK") {
-            console.log("Ei yhteyttä");
-            //luo errortapahtuma
-          } else {
-            state.allFarmStatistics[farmId] = res.data;
-          }
+          state.allFarmStatistics[farmId] = res.data;
         })
         .then(() => {
           state.validatedStatistics = state.allFarmStatistics[
@@ -173,18 +173,20 @@ export default createStore({
       state.filteredStatistics.splice(endIndex);
     },
     syncMonthlyStatistics(state) {
+      state.error = false;
+      state.errorMessage = "";
       state.loading = true;
       const farmId = state.selectedFarm;
       const urlph =
         "http://localhost:8080/v1/farms/" + farmId + "/stats/ph/monthly";
       axios(urlph)
+        .catch((error) => {
+          state.error = true;
+          state.errorMessage = error.message;
+          console.log(error.message);
+        })
         .then((res) => {
-          if (res.statusText != "OK") {
-            console.log("Ei yhteyttä");
-            //luo errortapahtuma
-          } else {
-            state.allMonthlyData.ph = res.data;
-          }
+          state.allMonthlyData.ph = res.data;
         })
         .then(() => {
           const urltemp =
@@ -192,13 +194,13 @@ export default createStore({
             farmId +
             "/stats/temperature/monthly";
           axios(urltemp)
+            .catch((error) => {
+              state.error = true;
+              state.errorMessage = error.message;
+              console.log(error.message);
+            })
             .then((res) => {
-              if (res.statusText != "OK") {
-                console.log("Ei yhteyttä");
-                //luo errortapahtuma
-              } else {
-                state.allMonthlyData.temperature = res.data;
-              }
+              state.allMonthlyData.temperature = res.data;
             })
             .then(() => {
               const urlrain =
@@ -206,13 +208,13 @@ export default createStore({
                 farmId +
                 "/stats/rainfall/monthly";
               axios(urlrain)
+                .catch((error) => {
+                  state.error = true;
+                  state.errorMessage = error.message;
+                  console.log(error.message);
+                })
                 .then((res) => {
-                  if (res.statusText != "OK") {
-                    console.log("Ei yhteyttä");
-                    //luo errortapahtuma
-                  } else {
-                    state.allMonthlyData.rainfall = res.data;
-                  }
+                  state.allMonthlyData.rainfall = res.data;
                   state.loading = false;
                 })
                 //validate monthlyData
@@ -351,6 +353,12 @@ export default createStore({
     },
     activeTab(state) {
       return state.activeTab;
+    },
+    error(state) {
+      return state.error;
+    },
+    errorMessage(state) {
+      return state.errorMessage;
     },
   },
   actions: {

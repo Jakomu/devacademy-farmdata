@@ -1,7 +1,10 @@
 <template>
-  <LineChart :chartData="phChartData" />
-  <LineChart :chartData="temperatureChartData" />
-  <LineChart :chartData="rainfallChartData" />
+  <h2>PH</h2>
+  <LineChart class="linechart" :chartData="phChartData" />
+  <h2>TEMPERATURE</h2>
+  <LineChart class="linechart" :chartData="temperatureChartData" />
+  <h2>RAINFALL</h2>
+  <LineChart class="linechart" :chartData="rainfallChartData" />
 </template>
 
 <script>
@@ -35,7 +38,7 @@ export default {
 </script>
 
 <style scoped>
-* {
+.linechart {
   width: 70%;
   height: 300px;
   margin: auto;

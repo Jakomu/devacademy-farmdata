@@ -4,6 +4,7 @@ import axios from "axios";
 export default createStore({
   state() {
     return {
+      activeTab: "home",
       serverStatus: true,
       listOfFarms: [],
       selectedFarm: "",
@@ -35,13 +36,13 @@ export default createStore({
     };
   },
   mutations: {
-    checkServerStatus(state) {
-      axios("http://localhost:8080/health").then((res) => {
-        if (res.serverStatus == "OK") {
-          state.serverStatus = true;
-        } else state.serverStatus == false;
-      });
-    },
+    // checkServerStatus(state) {
+    //   axios("http://localhost:8080/health").then((res) => {
+    //     if (res.serverStatus == "OK") {
+    //       state.serverStatus = true;
+    //     } else state.serverStatus == false;
+    //   });
+    // },
     syncListOfFarms(state) {
       state.loading = true;
       axios("http://localhost:8080/v1/farms").then((res) => {
@@ -246,7 +247,27 @@ export default createStore({
                   //sort monthlyData to datasets
                   state.phChartData = {
                     labels: state.chartLabelsMonths,
-                    datasets: [{ data: [] }],
+                    datasets: [
+                      {
+                        data: [],
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        tension: 0.3,
+                        options: {
+                          plugins: {
+                            title: {
+                              display: true,
+                              text: "PH",
+                              position: "top",
+                              align: "center",
+                            },
+                            legend: {
+                              display: true,
+                            },
+                          },
+                        },
+                      },
+                    ],
                   };
                   state.allMonthlyData.ph.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
@@ -256,7 +277,14 @@ export default createStore({
                   });
                   state.temperatureChartData = {
                     labels: state.chartLabelsMonths,
-                    datasets: [{ data: [] }],
+                    datasets: [
+                      {
+                        data: [],
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        tension: 0.3,
+                      },
+                    ],
                   };
                   state.allMonthlyData.temperature.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
@@ -267,7 +295,14 @@ export default createStore({
                   });
                   state.rainfallChartData = {
                     labels: state.chartLabelsMonths,
-                    datasets: [{ data: [] }],
+                    datasets: [
+                      {
+                        data: [],
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        tension: 0.3,
+                      },
+                    ],
                   };
                   state.allMonthlyData.rainfall.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
@@ -281,6 +316,9 @@ export default createStore({
     },
     changeSelectedYear(state, year) {
       state.selectedYear = year;
+    },
+    activateTab(state, tab) {
+      state.activeTab = tab;
     },
   },
   getters: {
@@ -310,6 +348,9 @@ export default createStore({
     },
     rainfallChartData(state) {
       return state.rainfallChartData;
+    },
+    activeTab(state) {
+      return state.activeTab;
     },
   },
   actions: {
@@ -351,6 +392,9 @@ export default createStore({
     },
     changeSelectedYear(context, year) {
       context.commit("changeSelectedYear", year);
+    },
+    activateTab(context, tab) {
+      context.commit("activateTab", tab);
     },
   },
 });

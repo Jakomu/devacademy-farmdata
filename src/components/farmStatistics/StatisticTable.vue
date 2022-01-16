@@ -2,12 +2,30 @@
   <div>
     <h1>{{ listOfFarms[selectedFarm - 1].name }}</h1>
     <div>
-      <button @click="clickedFilterStatistics('all')">All measurements</button>
-      <button @click="clickedFilterStatistics('rainfall')">Rainfall</button>
-      <button @click="clickedFilterStatistics('temperature')">
+      <button
+        @click="clickedFilterStatistics('all')"
+        :class="{ activeBtn: activeFilter == 'all' }"
+      >
+        All measurements
+      </button>
+      <button
+        @click="clickedFilterStatistics('rainfall')"
+        :class="{ activeBtn: activeFilter == 'rainfall' }"
+      >
+        Rainfall
+      </button>
+      <button
+        @click="clickedFilterStatistics('temperature')"
+        :class="{ activeBtn: activeFilter == 'temperature' }"
+      >
         Temperature
       </button>
-      <button @click="clickedFilterStatistics('ph')">Ph-value</button>
+      <button
+        @click="clickedFilterStatistics('ph')"
+        :class="{ activeBtn: activeFilter == 'ph' }"
+      >
+        Ph-value
+      </button>
     </div>
     <div>
       <input v-model="startDate" type="date" />
@@ -51,6 +69,7 @@ export default {
     return {
       startDate: "",
       endDate: "",
+      activeFilter: "",
     };
   },
   props: ["id"],
@@ -75,6 +94,7 @@ export default {
       if (this.endDate != "") this.changeEndDate(this.endDate);
     },
     clickedFilterStatistics(filterOption) {
+      this.activeFilter = filterOption;
       this.filterStatistics(filterOption);
       this.startDate = "";
       this.endDate = "";

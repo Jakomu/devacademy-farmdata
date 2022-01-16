@@ -2,7 +2,7 @@
   <div>
     <h2>Farm Info</h2>
   </div>
-  <div class="colums2">
+  <div class="flex">
     <farm-card
       v-for="farm in listOfFarms"
       :key="farm.farmId"
@@ -18,6 +18,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   mounted() {
     this.syncListOfFarms;
+    this.activateTab("farms");
   },
   components: {
     FarmCard,
@@ -26,5 +27,15 @@ export default {
     ...mapGetters(["listOfFarms"]),
     ...mapActions(["syncListOfFarms"]),
   },
+  methods: {
+    ...mapActions(["activateTab"]),
+  },
 };
 </script>
+
+<style scoped>
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+</style>

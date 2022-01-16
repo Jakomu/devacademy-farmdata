@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card">
     <h3>{{ farmInfo.name }}</h3>
     <p>{{ farmInfo.farmId }}</p>
     <p>{{ farmInfo.location }}</p>
@@ -15,8 +15,6 @@ export default {
 
 <style scoped>
 div {
-  border-style: solid;
-  max-width: 70%;
-  margin: 1rem auto;
+  flex-basis: 40%;
 }
 </style>

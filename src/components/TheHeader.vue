@@ -8,6 +8,7 @@
 div {
   background-color: rgb(45, 153, 45);
   height: 100px;
+  border-bottom: 2px solid rgb(25, 90, 25);
 }
 h1 {
   margin: 0;

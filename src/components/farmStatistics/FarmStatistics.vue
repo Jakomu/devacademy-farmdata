@@ -1,8 +1,18 @@
 <template>
   <div>
     <div>
-      <button @click="changeType('table')">Tables</button>
-      <button @click="changeType('chart')">Charts</button>
+      <button
+        @click="changeType('table')"
+        :class="{ activeBtn: statisticType == 'table' }"
+      >
+        Tables
+      </button>
+      <button
+        @click="changeType('chart')"
+        :class="{ activeBtn: statisticType == 'chart' }"
+      >
+        Charts
+      </button>
       <select @input="selectFarm">
         <option value="" disabled selected>Select farm</option>
         <option
@@ -14,15 +24,18 @@
         </option>
       </select>
     </div>
-    <statistic-table
-      v-if="this.selectedFarm && this.statisticType == 'table'"
-      :id="selectedFarm"
-    ></statistic-table>
-    <statistic-chart
-      v-else-if="this.selectedFarm && this.statisticType == 'chart'"
-      :id="selectedFarm"
-    >
-    </statistic-chart>
+    <div :class="{ card: selectedFarm }">
+      <statistic-table
+        v-if="this.selectedFarm && this.statisticType == 'table'"
+        :id="selectedFarm"
+      ></statistic-table>
+      <statistic-chart
+        v-else-if="this.selectedFarm && this.statisticType == 'chart'"
+        :id="selectedFarm"
+      >
+      </statistic-chart>
+      <p v-else>Please select a farm</p>
+    </div>
   </div>
 </template>
 
@@ -35,6 +48,7 @@ export default {
   mounted() {
     this.syncListOfFarms;
     this.resetSelectedFarm;
+    this.activateTab("statistics");
   },
   components: { StatisticTable, StatisticChart },
   computed: {
@@ -47,6 +61,7 @@ export default {
       "syncFarmStatistics",
       "changeStatisticType",
       "syncMonthlyStatistics",
+      "activateTab",
     ]),
     selectFarm(event) {
       const farmId = event.target.value;
@@ -60,3 +75,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+select {
+  margin: 1rem;
+}
+</style>

@@ -8,9 +8,7 @@
       <option value="2020">2020</option>
       <option value="2021">2021</option>
     </select>
-    <the-chart :sensor="'ph'"></the-chart>
-    <the-chart :sensor="'temperature'"></the-chart>
-    <the-chart :sensor="'rainfall'"></the-chart>
+    <the-chart></the-chart>
   </div>
 </template>
 
@@ -21,7 +19,7 @@ export default {
   components: { TheChart },
   props: ["id"],
   computed: {
-    ...mapGetters(["loading", "listOfFarms", "selectedFarm"]),
+    ...mapGetters(["listOfFarms", "selectedFarm"]),
   },
   methods: {
     ...mapActions(["changeSelectedYear", "syncMonthlyStatistics"]),

@@ -10,7 +10,6 @@ export default createStore({
       allFarmStatistics: {},
       validatedStatistics: [],
       filteredStatistics: [],
-      loading: false, //tee loadinghäkkyrä tai joku semmonen
       orderAscending: true,
       activatedOrder: "datetime",
       statisticType: "table",
@@ -18,10 +17,21 @@ export default createStore({
       phChartData: {},
       temperatureChartData: {},
       rainfallChartData: {},
-      // phChartData: {},
-      // temperatureChartData: {},
-      // rainfallChartData: {},
       selectedYear: "2019",
+      chartLabelsMonths: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
     };
   },
   mutations: {
@@ -235,20 +245,7 @@ export default createStore({
                     );
                   //sort monthlyData to datasets
                   state.phChartData = {
-                    labels: [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
-                    ],
+                    labels: state.chartLabelsMonths,
                     datasets: [{ data: [] }],
                   };
                   state.allMonthlyData.ph.stats.forEach((stat) => {
@@ -258,20 +255,7 @@ export default createStore({
                     }
                   });
                   state.temperatureChartData = {
-                    labels: [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
-                    ],
+                    labels: state.chartLabelsMonths,
                     datasets: [{ data: [] }],
                   };
                   state.allMonthlyData.temperature.stats.forEach((stat) => {
@@ -282,20 +266,7 @@ export default createStore({
                     }
                   });
                   state.rainfallChartData = {
-                    labels: [
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
-                    ],
+                    labels: state.chartLabelsMonths,
                     datasets: [{ data: [] }],
                   };
                   state.allMonthlyData.rainfall.stats.forEach((stat) => {
@@ -319,9 +290,6 @@ export default createStore({
     selectedFarm(state) {
       return state.selectedFarm;
     },
-    farmStatistics: (state) => (farmId) => {
-      return state.allFarmStatistics[farmId];
-    },
     filteredStatistics(state) {
       return state.filteredStatistics;
     },
@@ -333,9 +301,6 @@ export default createStore({
     },
     statisticType(state) {
       return state.statisticType;
-    },
-    selectedYear(state) {
-      return state.selectedYear;
     },
     phChartData(state) {
       return state.phChartData;

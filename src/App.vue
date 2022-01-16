@@ -1,7 +1,6 @@
 <template>
   <the-header> </the-header>
   <tab-selection></tab-selection>
-  <!-- <button @click="check">CHECK</button> -->
   <router-view></router-view>
 </template>
 
@@ -14,14 +13,6 @@ export default {
     TheHeader,
     TabSelection,
   },
-  // computed: {
-  // ...mapActions(["checkServerStatus"]),
-  // },
-  // methods: {
-  //   check() {
-  //     this.$store.dispatch("checkServerStatus");
-  //   },
-  // },
 };
 </script>
 

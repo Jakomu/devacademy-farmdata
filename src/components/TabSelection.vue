@@ -3,7 +3,6 @@
     <button @click="$router.push('farms')">Home</button>
     <button @click="$router.push('farms')">Farms</button>
     <button @click="$router.push('statistics')">Statistics</button>
-    <button @click="$router.push('statistics')">Compare</button>
   </div>
 </template>
 

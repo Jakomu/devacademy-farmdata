@@ -15,7 +15,12 @@ export default createStore({
       activatedOrder: "datetime",
       statisticType: "table",
       allMonthlyData: {},
-      monthlyDatasets: {},
+      phChartData: {},
+      temperatureChartData: {},
+      rainfallChartData: {},
+      // phChartData: {},
+      // temperatureChartData: {},
+      // rainfallChartData: {},
       selectedYear: "2019",
     };
   },
@@ -42,9 +47,9 @@ export default createStore({
       });
       state.loading = false;
     },
-    syncFarmStatistics(state, payload) {
+    syncFarmStatistics(state) {
       state.loading = true;
-      const farmId = payload;
+      const farmId = state.selectedFarm;
       const url = "http://localhost:8080/v1/farms/" + farmId + "/stats";
       axios(url)
         .then((res) => {
@@ -142,7 +147,9 @@ export default createStore({
       const startIndex = state.filteredStatistics.findIndex(
         (obj) => obj.datetime.localeCompare(startDate) >= 0
       );
-      state.filteredStatistics.splice(0, startIndex);
+      if (startIndex < 0) {
+        state.filteredStatistics.splice(0);
+      } else state.filteredStatistics.splice(0, startIndex);
     },
     changeEndDate(state, endDate) {
       state.filteredStatistics = state.filteredStatistics.sort((a, b) => {
@@ -154,8 +161,9 @@ export default createStore({
       );
       state.filteredStatistics.splice(endIndex);
     },
-    syncMonthlyStatistics(state, farmId) {
+    syncMonthlyStatistics(state) {
       state.loading = true;
+      const farmId = state.selectedFarm;
       const urlph =
         "http://localhost:8080/v1/farms/" + farmId + "/stats/ph/monthly";
       axios(urlph)
@@ -226,38 +234,82 @@ export default createStore({
                         obj.average <= 500
                     );
                   //sort monthlyData to datasets
-                  const monthlyData = {
-                    ph: [{ data: [] }],
-                    temperature: [{ data: [] }],
-                    rainfall: [{ data: [] }],
+                  state.phChartData = {
+                    labels: [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    datasets: [{ data: [] }],
                   };
                   state.allMonthlyData.ph.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
-                      monthlyData.ph[0].data[stat.month - 1] =
+                      state.phChartData.datasets[0].data[stat.month - 1] =
                         stat.average.toFixed(2);
                     }
                   });
+                  state.temperatureChartData = {
+                    labels: [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    datasets: [{ data: [] }],
+                  };
                   state.allMonthlyData.temperature.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
-                      monthlyData.temperature[0].data[stat.month - 1] =
-                        stat.average.toFixed(2);
+                      state.temperatureChartData.datasets[0].data[
+                        stat.month - 1
+                      ] = stat.average.toFixed(2);
                     }
                   });
+                  state.rainfallChartData = {
+                    labels: [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ],
+                    datasets: [{ data: [] }],
+                  };
                   state.allMonthlyData.rainfall.stats.forEach((stat) => {
                     if (stat.year == state.selectedYear) {
-                      monthlyData.rainfall[0].data[stat.month - 1] =
+                      state.rainfallChartData.datasets[0].data[stat.month - 1] =
                         stat.average.toFixed(2);
                     }
                   });
-                  state.monthlyDatasets = monthlyData;
                 });
             });
         });
     },
-
-    selectChartYear(state, year) {
+    changeSelectedYear(state, year) {
       state.selectedYear = year;
-      console.log(state.selectedYear);
     },
   },
   getters: {
@@ -285,8 +337,14 @@ export default createStore({
     selectedYear(state) {
       return state.selectedYear;
     },
-    monthlyDatasets(state) {
-      return state.monthlyDatasets;
+    phChartData(state) {
+      return state.phChartData;
+    },
+    temperatureChartData(state) {
+      return state.temperatureChartData;
+    },
+    rainfallChartData(state) {
+      return state.rainfallChartData;
     },
   },
   actions: {
@@ -296,8 +354,8 @@ export default createStore({
     syncListOfFarms(context) {
       context.commit("syncListOfFarms");
     },
-    syncFarmStatistics(context, payload) {
-      context.commit("syncFarmStatistics", payload);
+    syncFarmStatistics(context) {
+      context.commit("syncFarmStatistics");
     },
     changeSelectedFarm(context, payload) {
       context.commit("changeSelectedFarm", payload);
@@ -323,11 +381,11 @@ export default createStore({
     changeEndDate(context, endDate) {
       context.commit("changeEndDate", endDate);
     },
-    syncMonthlyStatistics(context, farmId) {
-      context.commit("syncMonthlyStatistics", farmId);
+    syncMonthlyStatistics(context) {
+      context.commit("syncMonthlyStatistics");
     },
-    selectChartYear(context, year) {
-      context.commit("selectChartYear", year);
+    changeSelectedYear(context, year) {
+      context.commit("changeSelectedYear", year);
     },
   },
 });

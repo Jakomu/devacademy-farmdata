@@ -4,7 +4,7 @@
       <button @click="changeType('table')">Tables</button>
       <button @click="changeType('chart')">Charts</button>
       <select @input="selectFarm">
-        <option value="" disabled selected>Select a farm</option>
+        <option value="" disabled selected>Select farm</option>
         <option
           v-for="farm in listOfFarms"
           :key="farm.farm_id"
@@ -14,7 +14,6 @@
         </option>
       </select>
     </div>
-    <div v-if="loading"><p>Loading...</p></div>
     <statistic-table
       v-if="this.selectedFarm && this.statisticType == 'table'"
       :id="selectedFarm"
@@ -52,8 +51,8 @@ export default {
     selectFarm(event) {
       const farmId = event.target.value;
       this.changeSelectedFarm(farmId);
-      this.syncFarmStatistics(farmId);
-      this.syncMonthlyStatistics(farmId);
+      this.syncFarmStatistics();
+      this.syncMonthlyStatistics();
     },
     changeType(type) {
       this.changeStatisticType(type);

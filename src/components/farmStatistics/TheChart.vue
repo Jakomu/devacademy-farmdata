@@ -1,5 +1,7 @@
 <template>
-  <LineChart :chartData="chartData" />
+  <LineChart v-if="sensor == 'ph'" :chartData="phChartData" />
+  <LineChart v-if="sensor == 'temperature'" :chartData="temperatureChartData" />
+  <LineChart v-if="sensor == 'rainfall'" :chartData="rainfallChartData" />
 </template>
 
 <script>
@@ -23,51 +25,54 @@ Chart.register(
 );
 
 export default {
-  data() {
-    return {
-      chartData: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        datasets: [{ data: [] }],
-      },
-    };
-  },
+  // data() {
+  //   return {
+  //     chartData: {
+  //       labels: [
+  //         "Jan",
+  //         "Feb",
+  //         "Mar",
+  //         "Apr",
+  //         "May",
+  //         "Jun",
+  //         "Jul",
+  //         "Aug",
+  //         "Sep",
+  //         "Oct",
+  //         "Nov",
+  //         "Dec",
+  //       ],
+  //       datasets: [{ data: this.monthlyDatasets }],
+  //     },
+  //   };
+  // },
   props: ["sensor"],
   components: {
     LineChart,
   },
   computed: {
-    ...mapGetters(["selectedYear", "monthlyDatasets"]),
+    ...mapGetters(["phChartData", "temperatureChartData", "rainfallChartData"]),
   },
-  mounted() {
-    if (this.sensor == "ph") {
-      for (let i = 0; i < 12; i++) {
-        this.chartData.datasets[0].data[i] = this.monthlyDatasets.ph[0].data[i];
-      }
-    } else if (this.sensor == "temperature") {
-      for (let i = 0; i < 12; i++) {
-        this.chartData.datasets[0].data[i] =
-          this.monthlyDatasets.temperature[0].data[i];
-      }
-    } else if (this.sensor == "rainfall") {
-      for (let i = 0; i < 12; i++) {
-        this.chartData.datasets[0].data[i] =
-          this.monthlyDatasets.rainfall[0].data[i];
-      }
-    }
-  },
+  // mounted() {
+  //   if (this.sensor == "ph") {
+
+  //   }
+  //   if (this.sensor == "ph") {
+  //     for (let i = 0; i < 12; i++) {
+  //       this.chartData.datasets[0].data[i] = this.monthlyDatasets.ph[0].data[i];
+  //     }
+  //   } else if (this.sensor == "temperature") {
+  //     for (let i = 0; i < 12; i++) {
+  //       this.chartData.datasets[0].data[i] =
+  //         this.monthlyDatasets.temperature[0].data[i];
+  //     }
+  //   } else if (this.sensor == "rainfall") {
+  //     for (let i = 0; i < 12; i++) {
+  //       this.chartData.datasets[0].data[i] =
+  //         this.monthlyDatasets.rainfall[0].data[i];
+  //     }
+  //   }
+  // },
 };
 </script>
 

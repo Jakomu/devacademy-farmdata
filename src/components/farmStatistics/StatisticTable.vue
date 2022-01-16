@@ -2,10 +2,12 @@
   <div>
     <h1>{{ listOfFarms[selectedFarm - 1].name }}</h1>
     <div>
-      <button @click="filterStatistics('all')">All measurements</button>
-      <button @click="filterStatistics('rainfall')">Rainfall</button>
-      <button @click="filterStatistics('temperature')">Temperature</button>
-      <button @click="filterStatistics('ph')">Ph-value</button>
+      <button @click="clickedFilterStatistics('all')">All measurements</button>
+      <button @click="clickedFilterStatistics('rainfall')">Rainfall</button>
+      <button @click="clickedFilterStatistics('temperature')">
+        Temperature
+      </button>
+      <button @click="clickedFilterStatistics('ph')">Ph-value</button>
     </div>
     <div>
       <input v-model="startDate" type="date" />
@@ -71,6 +73,11 @@ export default {
     dateInput() {
       if (this.startDate != "") this.changeStartDate(this.startDate);
       if (this.endDate != "") this.changeEndDate(this.endDate);
+    },
+    clickedFilterStatistics(filterOption) {
+      this.filterStatistics(filterOption);
+      this.startDate = "";
+      this.endDate = "";
     },
   },
 };
